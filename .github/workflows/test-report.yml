@@ -1,7 +1,7 @@
 name: test-report
 on:
   push:
-    branches: [ master ]
+    branches: [ fix/github-ci ]
   pull_request:
     branches: [ master ]
 permissions:
