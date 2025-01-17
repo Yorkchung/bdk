@@ -2,7 +2,7 @@ name: lint-and-compile
 
 on:
   push:
-    branches: [ master ]
+    branches: [ test-cicd ]
   pull_request:
     branches: [ '*' ]
 

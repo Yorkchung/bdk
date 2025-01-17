@@ -253,17 +253,26 @@ export default class Channel extends AbstractService {
     return {
       fetchChannelConfig: async (channelName: string): Promise<InfraRunnerResultType> => {
         logger.debug(`Get Channel Group step 1: ${channelName}`)
+        console.log(`Get Channel Group step 1: ${channelName}`)
+        console.log(await (new FabricInstance(this.config, this.infra)).fetchChannelConfig(channelName, channelName, 'block', undefined, OrgTypeEnum.PEER))
         return await (new FabricInstance(this.config, this.infra)).fetchChannelConfig(channelName, channelName, 'block', undefined, OrgTypeEnum.PEER)
       },
       decodeFetchedChannelConfig: async (channelName: string): Promise<{ anchorPeer: string[]; orderer: string[] }> => {
         logger.debug(`Get Channel Group step 2: ${channelName}`)
+        console.log(`Get Channel Group step 2: ${channelName}`)
         await (new FabricTools(this.config, this.infra)).decodeChannelConfig(channelName)
         const channelConfigJson = this.bdkFile.getDecodedChannelConfig(channelName)
+        console.log(channelConfigJson)
         const anchorPeer: string[] = []
         const groups = channelConfigJson.data.data[0].payload.data.config.channel_group.groups
+        console.log(groups.Application.groups)
+        console.log(groups.Application.groups[Object.keys(groups.Application.groups)[0]].values.AnchorPeers.value.anchor_peers)
         Object.values(groups.Application.groups).forEach((x: any) => x.values.AnchorPeers?.value.anchor_peers.forEach((y: any) => anchorPeer.push(`${y.host}:${y.port}`)))
         const orderer: string[] = []
+        console.log(groups.Orderer.groups)
+        console.log(groups.Orderer.groups[Object.keys(groups.Orderer.groups)[0]].values.Endpoints.value.addresses)
         Object.values(groups.Orderer.groups).forEach((x: any) => x.values.Endpoints.value.addresses.forEach((y: any) => orderer.push(y)))
+        console.log(anchorPeer, orderer)
         return { anchorPeer, orderer }
       },
     }

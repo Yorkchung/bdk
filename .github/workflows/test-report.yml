@@ -1,7 +1,7 @@
 name: test-report
 on:
   push:
-    branches: [ master ]
+    branches: [ test-cicd ]
   pull_request:
     branches: [ master ]
 permissions:
@@ -10,7 +10,8 @@ permissions:
   checks: write
 jobs:
   report:
-    runs-on: ubuntu-latest
+    # runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-node@v3

@@ -2,13 +2,14 @@ name: unit-test
 
 on:
   push:
-    branches: [ master ]
+    branches: [ test-cicd ]
   pull_request:
     branches: [ master ]
 
 jobs:
   unit-test:
-    runs-on: ubuntu-latest
+    # runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-node@v3

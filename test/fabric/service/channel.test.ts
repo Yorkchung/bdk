@@ -11,6 +11,7 @@ import { DockerResultType } from '../../../src/fabric/instance/infra/InfraRunner
 import Peer from '../../../src/fabric/service/peer'
 import Orderer from '../../../src/fabric/service/orderer'
 import Discover from '../../../src/fabric/service/discover'
+import { sleep } from '../../../src/util'
 
 describe('Channel service:', function () {
   this.timeout(60000)
