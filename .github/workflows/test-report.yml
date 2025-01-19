@@ -1,7 +1,7 @@
 name: test-report
 on:
   push:
-    branches: [ master ]
+    branches: [ test-3.1.0 ]
   pull_request:
     branches: [ master ]
 permissions:

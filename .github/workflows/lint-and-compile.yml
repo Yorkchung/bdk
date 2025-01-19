@@ -2,7 +2,7 @@ name: lint-and-compile
 
 on:
   push:
-    branches: [ master ]
+    branches: [ test-3.1.0 ]
   pull_request:
     branches: [ '*' ]
 
