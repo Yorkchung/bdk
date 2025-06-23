@@ -18,6 +18,7 @@ sleep 2
 export_env 'peer' ${PEER_ORG_NAME_ORGNEW} ${PEER_ORG_DOMAIN_ORGNEW} 'peer0'
 bdk fabric org peer add -c "new-channel" -n ${PEER_ORG_NAME_ORG0}
 bdk fabric channel approve -c "new-channel"
+sleep 10
 bdk fabric channel update -o ${ORDERER_ORG_URL_ORGNEW_ORDERER0} -c "new-channel"
 
 # [org0] Join new-channel

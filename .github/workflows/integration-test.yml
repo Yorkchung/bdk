@@ -2,7 +2,7 @@ name: integration-test
 
 on:
   push:
-    branches: [ master ]
+    branches: [ fix/fabric-cicd ]
   pull_request:
     branches: [ master ]
 
@@ -20,7 +20,7 @@ jobs:
     - run: ./cicd/test_script/cryptogen.sh
 
   test-ca:
-    runs-on: ubuntu-22.04 # ubuntu-latest | ubuntu-22.04
+    runs-on: ubuntu-latest # ubuntu-latest | ubuntu-22.04
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
