@@ -18,6 +18,20 @@ sleep 2
 export_env 'peer' ${PEER_ORG_NAME_ORGNEW} ${PEER_ORG_DOMAIN_ORGNEW} 'peer0'
 bdk fabric org peer add -c "new-channel" -n ${PEER_ORG_NAME_ORG0}
 bdk fabric channel approve -c "new-channel"
+
+# docker ps -a
+# free -h
+# for cid in $(docker ps -q); do
+#   cname=$(docker inspect --format '{{.Name}}' $cid | sed 's/^\/\(.*\)/\1/')
+#   echo "===== $cname ====="
+#   docker logs --tail 50 $cid
+#   echo
+# done
+# sleep 10
+
+# bdk fabric channel decode-envelope -c "new-channel"
+# bdk fabric channel fetch -o ${ORDERER_ORG_URL_ORG0_ORDERER0} -n "new-channel" --config-style Latest-Block -f newest_genesis
+# sleep 10
 bdk fabric channel update -o ${ORDERER_ORG_URL_ORGNEW_ORDERER0} -c "new-channel"
 
 # [org0] Join new-channel
