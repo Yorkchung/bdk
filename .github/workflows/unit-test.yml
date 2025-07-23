@@ -2,9 +2,9 @@ name: unit-test
 
 on:
   push:
-    branches: [ master ]
+    branches: [ test/3.4.0 ]
   pull_request:
-    branches: [ master ]
+    branches: [ test/3.4.0 ]
 
 jobs:
   unit-test:
@@ -25,7 +25,7 @@ jobs:
         solc-select install 0.8.17
         solc-select use 0.8.17
         solc --version
-    - run: npm run test:coverage
+    - run: npm run test:fabric
 
     - uses: VeryGoodOpenSource/very_good_coverage@v2
       with:

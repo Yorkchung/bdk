@@ -24,13 +24,13 @@ describe('Fabric.Backup', function () {
   })
 
   after(async () => {
+    await minimumNetwork.deleteNetwork()
     // Delete all backup files
     try {
       fs.rmSync(resolve(`${bdkPath}/backup`), { recursive: true, force: true })
     } catch (e) {
       console.warn('Cleanup failed:', e)
     }
-    await minimumNetwork.deleteNetwork()
   })
 
   // create a new backup instance
@@ -128,11 +128,12 @@ describe('Fabric.Backup', function () {
 
     after(() => {
       fs.unlinkSync(`${config.infraConfig.bdkPath}/.env`)
-      try {
-        fs.rmSync(`${config.infraConfig.bdkPath}/${config.networkName}`, { recursive: true, force: true })
-      } catch (e) {
-        console.warn('Cleanup failed:', e)
-      }
+      fs.rmSync(`${config.infraConfig.bdkPath}/${config.networkName}`, { recursive: true })
+      // try {
+      //   fs.rmSync(`${config.infraConfig.bdkPath}/${config.networkName}`, { recursive: true, force: true })
+      // } catch (e) {
+      //   console.warn('Cleanup failed:', e)
+      // }
     })
 
     it('should exist network folder in specified path', () => {
@@ -148,11 +149,12 @@ describe('Fabric.Backup', function () {
     })
 
     it('should import a backup tarball', async () => {
-      try {
-        fs.rmSync(resolve(`${bdkPath}/bdk-fabric-network`), { recursive: true, force: true })
-      } catch (e) {
-        console.warn('Cleanup failed:', e)
-      }
+      // try {
+      //   fs.rmSync(resolve(`${bdkPath}/bdk-fabric-network`), { recursive: true, force: true })
+      // } catch (e) {
+      //   console.warn('Cleanup failed:', e)
+      // }
+      fs.rmSync(resolve(`${bdkPath}/bdk-fabric-network`), { recursive: true })
       fs.mkdirSync(resolve(`${bdkPath}/bdk-fabric-network`))
       await sleep(500)
 
