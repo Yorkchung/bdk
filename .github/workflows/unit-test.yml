@@ -3,12 +3,13 @@ name: unit-test
 on:
   push:
     branches: [ master ]
-  pull_request:
-    branches: [ master ]
+  # pull_request:
+  #   branches: [ master ]
 
 jobs:
-  unit-test:
-    runs-on: ubuntu-22.04 # ubuntu-latest | ubuntu-22.04
+  # Fabric 模組測試
+  test-fabric:
+    runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
@@ -17,6 +18,7 @@ jobs:
         cache: 'npm'
     - run: npm ci
     - run: npm run build:console
+
     - name: Install solc 0.8.17
       run: |
         sudo apt-get update
@@ -25,9 +27,249 @@ jobs:
         solc-select install 0.8.17
         solc-select use 0.8.17
         solc --version
-    - run: npm run test:coverage
 
-    - uses: VeryGoodOpenSource/very_good_coverage@v2
+    - name: Run Fabric tests
+      run: npm run test:fabric:dir
+
+    - name: Check Fabric coverage
+      run: |
+        if [ -f "./coverage/fabric/lcov.info" ]; then
+          echo "Fabric coverage OK"
+          wc -l ./coverage/fabric/lcov.info
+        else
+          echo "Fabric coverage missing"
+          ls -la ./coverage/
+        fi
+
+    - name: Check Fabric JSON report
+      run: |
+        if [ -f "./reports/fabric.json" ]; then
+          echo "Fabric JSON report generated"
+          ls -lh ./reports/fabric.json
+        else
+          echo "Fabric JSON report missing"
+          ls -la ./reports/ || echo "reports directory not found"
+        fi
+
+    - name: Upload Fabric coverage
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-fabric
+        path: ./coverage/fabric/lcov.info
+        retention-days: 1
+
+    - name: Upload Fabric JSON report
+      uses: actions/upload-artifact@v4
+      with:
+        name: mocha-fabric
+        path: ./reports/fabric.json
+        retention-days: 1
+
+  # ETH/Besu 模組測試
+  test-besu:
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        node-version-file: '.nvmrc'
+        cache: 'npm'
+    - run: npm ci
+    - run: npm run build:console
+
+    - name: Install solc 0.8.17
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y python3 python3-pip curl
+        pip3 install solc-select
+        solc-select install 0.8.17
+        solc-select use 0.8.17
+        solc --version
+
+    - name: Run Besu tests
+      run: npm run test:besu:dir
+
+    - name: Check Besu coverage
+      run: |
+        if [ -f "./coverage/besu/lcov.info" ]; then
+          echo "Besu coverage OK"
+          wc -l ./coverage/besu/lcov.info
+        else
+          echo "Besu coverage missing"
+          ls -la ./coverage/
+        fi
+
+    - name: Check Besu JSON report
+      run: |
+        if [ -f "./reports/besu.json" ]; then
+          echo "Besu JSON report generated"
+          ls -lh ./reports/besu.json
+        else
+          echo "Besu JSON report missing"
+          ls -la ./reports/ || echo "reports directory not found"
+        fi
+
+    - name: Upload Besu coverage
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-besu
+        path: ./coverage/besu/lcov.info
+        retention-days: 1
+
+    - name: Upload Besu JSON report
+      uses: actions/upload-artifact@v4
+      with:
+        name: mocha-besu
+        path: ./reports/besu.json
+        retention-days: 1
+
+  # ------------------------------------------------------------
+
+  # ETH/Quorum 模組測試
+  test-quorum:
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        node-version-file: '.nvmrc'
+        cache: 'npm'
+    - run: npm ci
+    - run: npm run build:console
+
+    - name: Install solc 0.8.17
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y python3 python3-pip curl
+        pip3 install solc-select
+        solc-select install 0.8.17
+        solc-select use 0.8.17
+        solc --version
+
+    - name: Run Quorum tests
+      run: npm run test:quorum:dir
+
+    - name: Check Quorum coverage
+      run: |
+        if [ -f "./coverage/quorum/lcov.info" ]; then
+          echo "Quorum coverage OK"
+          wc -l ./coverage/quorum/lcov.info
+        else
+          echo "Quorum coverage missing"
+          ls -la ./coverage/
+        fi
+
+    - name: Check Quorum JSON report
+      run: |
+        if [ -f "./reports/quorum.json" ]; then
+          echo "Quorum JSON report generated"
+          ls -lh ./reports/quorum.json
+        else
+          echo "Quorum JSON report missing"
+          ls -la ./reports/ || echo "reports directory not found"
+        fi
+
+    - name: Upload Quorum coverage
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-quorum
+        path: ./coverage/quorum/lcov.info
+        retention-days: 1
+
+    - name: Upload Quorum JSON report
+      uses: actions/upload-artifact@v4
+      with:
+        name: mocha-quorum
+        path: ./reports/quorum.json
+        retention-days: 1
+
+  # ------------------------------------------------------------
+
+  # 其他模組測試
+  test-others:
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        node-version-file: '.nvmrc'
+        cache: 'npm'
+    - run: npm ci
+    - run: npm run build:console
+
+    - name: Run other tests
+      run: npm run test:others
+
+    - name: Check others coverage
+      run: |
+        if [ -f "./coverage/others/lcov.info" ]; then
+          echo "Others coverage OK"
+          wc -l ./coverage/others/lcov.info
+        else
+          echo "Others coverage missing"
+          ls -la ./coverage/
+        fi
+
+    - name: Check Others JSON report
+      run: |
+        if [ -f "./reports/others.json" ]; then
+          echo "Others JSON report generated"
+          ls -lh ./reports/others.json
+        else
+          echo "Others JSON report missing"
+          ls -la ./reports/ || echo "reports directory not found"
+        fi
+
+    - name: Upload Others coverage
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-others
+        path: ./coverage/others/lcov.info
+        retention-days: 1
+
+    - name: Upload Others JSON report
+      uses: actions/upload-artifact@v4
+      with:
+        name: mocha-others
+        path: ./reports/others.json
+        retention-days: 1
+
+  # ------------------------------------------------------------
+
+  # 合併 Coverage 並檢查
+  coverage-check:
+    runs-on: ubuntu-22.04
+    needs: [test-fabric, test-besu, test-quorum, test-others]
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        node-version-file: '.nvmrc'
+        cache: 'npm'
+    - run: npm ci
+
+    - name: Install lcov
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y lcov
+
+    - name: Download all coverage files
+      uses: actions/download-artifact@v4
+      with:
+        pattern: "coverage-*"
+        path: ./coverage/
+
+    - name: Merge coverage files
+      run: |
+        lcov -a ./coverage/coverage-fabric/lcov.info \
+             -a ./coverage/coverage-besu/lcov.info \
+             -a ./coverage/coverage-quorum/lcov.info \
+             -a ./coverage/coverage-others/lcov.info \
+             -o ./coverage/lcov.info
+        lcov --summary ./coverage/lcov.info
+
+    - name: Verify Coverage ≥ 70%
+      uses: VeryGoodOpenSource/very_good_coverage@v2
       with:
         path: './coverage/lcov.info'
         min_coverage: 70
