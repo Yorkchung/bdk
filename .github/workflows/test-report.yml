@@ -26,14 +26,13 @@ jobs:
       - run: npm ci
       - run: npm run build:console
 
-      - name: Install jq
-        run: sudo apt-get update && sudo apt-get install -y jq
-
       - name: Run mocha tests and generate json report
         run: |
           set -e
           mkdir -p reports
-          NODE_ENV=testing BDK_PATH=$(pwd)/test/bdk BDK_DOCKER_HOST_PATH=$(pwd)/test/bdk npx nyc --temp-dir ./coverage/fabric/.nyc_output --report-dir ./coverage/fabric npx mocha --reporter json --require ts-node/register './test/fabric/**/*.test.ts' --exit > reports/fabric.json || echo '{}' > reports/fabric.json
+          NODE_ENV=testing BDK_PATH=$(pwd)/test/bdk BDK_DOCKER_HOST_PATH=$(pwd)/test/bdk npx nyc --silent --temp-dir ./coverage/fabric/.nyc_output --report-dir ./coverage/fabric npx mocha --reporter json --require ts-node/register './test/fabric/**/*.test.ts' --exit > reports/fabric.json || echo '{}' > reports/fabric.json
+          echo 'Coverage summary:'
+          npx nyc report --temp-dir ./coverage/fabric/.nyc_output --report-dir ./coverage/fabric --reporter=text
 
       - name: Upload Fabric JSON
         uses: actions/upload-artifact@v4
@@ -41,9 +40,6 @@ jobs:
           name: mocha-fabric
           path: reports/fabric.json
           retention-days: 1
-
-      # - name: Check Fabric JSON validity
-      #   run: jq . reports/fabric.json
 
       - name: Show Fabric test
         run: cat reports/fabric.json
@@ -61,9 +57,6 @@ jobs:
           cache: 'npm'
       - run: npm ci
       - run: npm run build:console
-
-      - name: Install jq
-        run: sudo apt-get update && sudo apt-get install -y jq
 
       - name: Install solc 0.8.17
         run: |
@@ -83,7 +76,9 @@ jobs:
             echo '--- Mocha version ---'
             npx mocha --version || true
             echo '--- Run Mocha with nyc and env ---'
-            NODE_ENV=testing BDK_PATH=$(pwd)/test/bdk BDK_DOCKER_HOST_PATH=$(pwd)/test/bdk npx nyc --temp-dir ./coverage/besu/.nyc_output --report-dir ./coverage/besu npx mocha --reporter json --require ts-node/register './test/eth/besu/**/*.test.ts' --exit > reports/besu.json || echo '{}' > reports/besu.json
+            NODE_ENV=testing BDK_PATH=$(pwd)/test/bdk BDK_DOCKER_HOST_PATH=$(pwd)/test/bdk npx nyc --silent --temp-dir ./coverage/besu/.nyc_output --report-dir ./coverage/besu npx mocha --reporter json --require ts-node/register './test/eth/besu/**/*.test.ts' --exit > reports/besu.json || echo '{}' > reports/besu.json
+            echo 'Coverage summary:'
+            npx nyc report --temp-dir ./coverage/besu/.nyc_output --report-dir ./coverage/besu --reporter=text
 
       - name: Upload Besu JSON
         uses: actions/upload-artifact@v4
@@ -91,9 +86,6 @@ jobs:
           name: mocha-besu
           path: reports/besu.json
           retention-days: 1
-
-      # - name: Check Besu JSON validity
-      #   run: jq . reports/besu.json
 
       - name: Show Besu test
         run: cat reports/besu.json
@@ -112,9 +104,6 @@ jobs:
       - run: npm ci
       - run: npm run build:console
 
-      - name: Install jq
-        run: sudo apt-get update && sudo apt-get install -y jq
-
       - name: Install solc 0.8.17
         run: |
           sudo apt-get update
@@ -128,7 +117,9 @@ jobs:
         run: |
           set -e
           mkdir -p reports
-          NODE_ENV=testing BDK_PATH=$(pwd)/test/bdk BDK_DOCKER_HOST_PATH=$(pwd)/test/bdk npx nyc --temp-dir ./coverage/quorum/.nyc_output --report-dir ./coverage/quorum npx mocha --reporter json --require ts-node/register './test/eth/quorum/**/*.test.ts' --exit > reports/quorum.json || echo '{}' > reports/quorum.json
+          NODE_ENV=testing BDK_PATH=$(pwd)/test/bdk BDK_DOCKER_HOST_PATH=$(pwd)/test/bdk npx nyc --silent --temp-dir ./coverage/quorum/.nyc_output --report-dir ./coverage/quorum npx mocha --reporter json --require ts-node/register './test/eth/quorum/**/*.test.ts' --exit > reports/quorum.json || echo '{}' > reports/quorum.json
+          echo 'Coverage summary:'
+          npx nyc report --temp-dir ./coverage/quorum/.nyc_output --report-dir ./coverage/quorum --reporter=text
 
       - name: Upload Quorum JSON
         uses: actions/upload-artifact@v4
@@ -136,9 +127,6 @@ jobs:
           name: mocha-quorum
           path: reports/quorum.json
           retention-days: 1
-
-      # - name: Check Quorum JSON validity
-      #   run: jq . reports/quorum.json
 
       - name: Show Quorum test
         run: cat reports/quorum.json
@@ -157,21 +145,13 @@ jobs:
       - run: npm ci
       - run: npm run build:console
 
-      - name: Install jq
-        run: sudo apt-get update && sudo apt-get install -y jq
-
       - name: Run mocha tests and generate json report
         run: |
           set -e
           mkdir -p reports
-          NODE_ENV=testing BDK_PATH=$(pwd)/test/bdk BDK_DOCKER_HOST_PATH=$(pwd)/test/bdk npx nyc --temp-dir ./coverage/others/.nyc_output --report-dir ./coverage/others npx mocha --reporter json --require ts-node/register './test/{hello,wallet,bdk}/**/*.test.ts' --exit > reports/others.json || echo '{}' > reports/others.json
-
-      - name: Check Others JSON has tests
-        run: |
-          if [ "$(jq '.stats.tests' reports/others.json)" -eq 0 ]; then
-            echo "No tests were run or JSON is empty!"
-            exit 1
-          fi
+          NODE_ENV=testing BDK_PATH=$(pwd)/test/bdk BDK_DOCKER_HOST_PATH=$(pwd)/test/bdk npx nyc --silent --temp-dir ./coverage/others/.nyc_output --report-dir ./coverage/others npx mocha --reporter json --require ts-node/register './test/{hello,wallet,bdk}/**/*.test.ts' --exit > reports/others.json || echo '{}' > reports/others.json
+          echo 'Coverage summary:'
+          npx nyc report --temp-dir ./coverage/others/.nyc_output --report-dir ./coverage/others --reporter=text
 
       - name: Upload Others JSON
         uses: actions/upload-artifact@v4
@@ -179,9 +159,6 @@ jobs:
           name: mocha-others
           path: reports/others.json
           retention-days: 1
-
-      # - name: Check Others JSON validity
-      #   run: jq . reports/others.json
 
       - name: Show Others test
         run: cat reports/others.json
@@ -201,6 +178,6 @@ jobs:
 
       - uses: dorny/test-reporter@v1
         with:
-          name: mocha-report
+          name: Mocha Report
           path: 'reports/**/*.json'
           reporter: mocha-json

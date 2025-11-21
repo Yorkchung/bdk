@@ -3,8 +3,8 @@ name: unit-test
 on:
   push:
     branches: [ master ]
-  # pull_request:
-  #   branches: [ master ]
+  pull_request:
+    branches: [ master ]
 
 jobs:
   # Fabric 模組測試
@@ -29,27 +29,7 @@ jobs:
         solc --version
 
     - name: Run Fabric tests
-      run: npm run test:fabric:dir
-
-    - name: Check Fabric coverage
-      run: |
-        if [ -f "./coverage/fabric/lcov.info" ]; then
-          echo "Fabric coverage OK"
-          wc -l ./coverage/fabric/lcov.info
-        else
-          echo "Fabric coverage missing"
-          ls -la ./coverage/
-        fi
-
-    - name: Check Fabric JSON report
-      run: |
-        if [ -f "./reports/fabric.json" ]; then
-          echo "Fabric JSON report generated"
-          ls -lh ./reports/fabric.json
-        else
-          echo "Fabric JSON report missing"
-          ls -la ./reports/ || echo "reports directory not found"
-        fi
+      run: npm run test:fabric
 
     - name: Upload Fabric coverage
       uses: actions/upload-artifact@v4
@@ -87,27 +67,7 @@ jobs:
         solc --version
 
     - name: Run Besu tests
-      run: npm run test:besu:dir
-
-    - name: Check Besu coverage
-      run: |
-        if [ -f "./coverage/besu/lcov.info" ]; then
-          echo "Besu coverage OK"
-          wc -l ./coverage/besu/lcov.info
-        else
-          echo "Besu coverage missing"
-          ls -la ./coverage/
-        fi
-
-    - name: Check Besu JSON report
-      run: |
-        if [ -f "./reports/besu.json" ]; then
-          echo "Besu JSON report generated"
-          ls -lh ./reports/besu.json
-        else
-          echo "Besu JSON report missing"
-          ls -la ./reports/ || echo "reports directory not found"
-        fi
+      run: npm run test:besu
 
     - name: Upload Besu coverage
       uses: actions/upload-artifact@v4
@@ -147,27 +107,7 @@ jobs:
         solc --version
 
     - name: Run Quorum tests
-      run: npm run test:quorum:dir
-
-    - name: Check Quorum coverage
-      run: |
-        if [ -f "./coverage/quorum/lcov.info" ]; then
-          echo "Quorum coverage OK"
-          wc -l ./coverage/quorum/lcov.info
-        else
-          echo "Quorum coverage missing"
-          ls -la ./coverage/
-        fi
-
-    - name: Check Quorum JSON report
-      run: |
-        if [ -f "./reports/quorum.json" ]; then
-          echo "Quorum JSON report generated"
-          ls -lh ./reports/quorum.json
-        else
-          echo "Quorum JSON report missing"
-          ls -la ./reports/ || echo "reports directory not found"
-        fi
+      run: npm run test:quorum
 
     - name: Upload Quorum coverage
       uses: actions/upload-artifact@v4
@@ -199,26 +139,6 @@ jobs:
 
     - name: Run other tests
       run: npm run test:others
-
-    - name: Check others coverage
-      run: |
-        if [ -f "./coverage/others/lcov.info" ]; then
-          echo "Others coverage OK"
-          wc -l ./coverage/others/lcov.info
-        else
-          echo "Others coverage missing"
-          ls -la ./coverage/
-        fi
-
-    - name: Check Others JSON report
-      run: |
-        if [ -f "./reports/others.json" ]; then
-          echo "Others JSON report generated"
-          ls -lh ./reports/others.json
-        else
-          echo "Others JSON report missing"
-          ls -la ./reports/ || echo "reports directory not found"
-        fi
 
     - name: Upload Others coverage
       uses: actions/upload-artifact@v4
